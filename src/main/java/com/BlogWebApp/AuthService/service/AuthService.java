@@ -22,13 +22,11 @@ public class AuthService {
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
-    // Kullanıcı kaydı
     public AuthResponse register(RegisterRequest request){
         if(userRepository.existsByEmail(request.getEmail())){
             throw new RuntimeException("Bu email kullanılıyor!");
         }
 
-        // Şifrenin şifrelenmesi
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
         User user = User.builder()
@@ -40,14 +38,12 @@ public class AuthService {
 
         userRepository.save(user);
 
-        // Kullanıcıya JWT token'ı verilir
         String token = jwtUtil.generateToken(user.getUserId(), user.getRole().name());
         return new AuthResponse(token);
     }
 
-    // Kullanıcı girişi
+
     public AuthResponse login(LoginRequest request){
-        // Kullanıcıyı doğrula
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -58,7 +54,7 @@ public class AuthService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
 
-        // JWT token oluşturulması
+
         String token = jwtUtil.generateToken(user.getUserId(), user.getRole().name());
         return new AuthResponse(token);
     }

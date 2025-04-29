@@ -1,6 +1,7 @@
 package com.BlogWebApp.AuthService.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -57,5 +58,13 @@ public class JwtUtil {
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    public void validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+        } catch (JwtException e) {
+            throw new RuntimeException("JWT geçersiz: " + e.getMessage());
+        }
     }
 }
