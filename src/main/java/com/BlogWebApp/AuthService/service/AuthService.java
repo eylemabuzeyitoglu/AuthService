@@ -28,27 +28,21 @@ public class AuthService {
     @Autowired
     private UserServiceClient userServiceClient;
 
-    // Register method
     public AuthResponse register(RegisterRequest request) {
-        // Şifreyi encode ediyoruz
+
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
-        // Burada User entity'si yerine UserResponse DTO kullanacağız
-        // Bu UserResponse, DB'den çekilen bir User objesini temsil eder
         UserResponse userResponse = new UserResponse();
         userResponse.setUserName(request.getUserName());
         userResponse.setEmail(request.getEmail());
         userResponse.setPassword(encodedPassword);
         userResponse.setRole(Role.USER);  // UserRole enum
 
-        // Burada sadece token oluşturuluyor, User entity'si yerine UserResponse kullanıyoruz
         String token = jwtUtil.generateToken(userResponse.getUserId(), userResponse.getRole().name());
         return new AuthResponse(token);
     }
 
-    // Login method
     public AuthResponse login(LoginRequest request) {
-        // Authentication işlemi
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -59,12 +53,10 @@ public class AuthService {
 
         UserResponse userResponse = userServiceClient.getUserById(request.getUserId());
 
-        // Token oluşturuluyor
         String token = jwtUtil.generateToken(userResponse.getUserId(), userResponse.getRole().name());
         return new AuthResponse(token);
     }
 
-    // Kullanıcıyı başka bir servisten almak için kullanılan metot
     public UserResponse getUserFromUserService(Long id) {
         return userServiceClient.getUserById(id);
     }

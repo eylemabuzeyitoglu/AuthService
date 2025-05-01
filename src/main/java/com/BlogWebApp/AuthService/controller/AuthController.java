@@ -24,9 +24,8 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
-    private UserServiceClient userServiceClient; // UserServiceClient enjekte edildi
+    private UserServiceClient userServiceClient;
 
-    // Kullanıcı bilgilerini user mikroservisinden almak için düzenlendi
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         UserResponse userResponse = userServiceClient.getUserById(id);
