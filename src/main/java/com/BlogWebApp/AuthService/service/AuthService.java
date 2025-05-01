@@ -1,13 +1,15 @@
 package com.BlogWebApp.AuthService.service;
 
-import com.BlogWebApp.AuthService.dto.AuthResponse;
-import com.BlogWebApp.AuthService.dto.LoginRequest;
-import com.BlogWebApp.AuthService.dto.RegisterRequest;
-import com.BlogWebApp.AuthService.model.Role;
-import com.BlogWebApp.AuthService.model.User;
-import com.BlogWebApp.AuthService.repository.UserRepository;
+
 import com.BlogWebApp.AuthService.security.JwtUtil;
+import com.BlogWebApp.CommonSecurity.client.UserServiceClient;
+import com.BlogWebApp.CommonSecurity.dto.AuthResponse;
+import com.BlogWebApp.CommonSecurity.dto.LoginRequest;
+import com.BlogWebApp.CommonSecurity.dto.RegisterRequest;
+import com.BlogWebApp.CommonSecurity.dto.UserResponse;
+import com.BlogWebApp.CommonSecurity.model.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,33 +19,36 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;
-    private final AuthenticationManager authenticationManager;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserServiceClient userServiceClient;
 
-    public AuthResponse register(RegisterRequest request){
-        if(userRepository.existsByEmail(request.getEmail())){
-            throw new RuntimeException("Bu email kullanılıyor!");
-        }
-
+    // Register method
+    public AuthResponse register(RegisterRequest request) {
+        // Şifreyi encode ediyoruz
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
-        User user = User.builder()
-                .userName(request.getUserName())
-                .email(request.getEmail())
-                .password(encodedPassword)  // Şifreyi şifrele
-                .role(Role.USER)
-                .build();
+        // Burada User entity'si yerine UserResponse DTO kullanacağız
+        // Bu UserResponse, DB'den çekilen bir User objesini temsil eder
+        UserResponse userResponse = new UserResponse();
+        userResponse.setUserName(request.getUserName());
+        userResponse.setEmail(request.getEmail());
+        userResponse.setPassword(encodedPassword);
+        userResponse.setRole(Role.USER);  // UserRole enum
 
-        userRepository.save(user);
-
-        String token = jwtUtil.generateToken(user.getUserId(), user.getRole().name());
+        // Burada sadece token oluşturuluyor, User entity'si yerine UserResponse kullanıyoruz
+        String token = jwtUtil.generateToken(userResponse.getUserId(), userResponse.getRole().name());
         return new AuthResponse(token);
     }
 
-
-    public AuthResponse login(LoginRequest request){
+    // Login method
+    public AuthResponse login(LoginRequest request) {
+        // Authentication işlemi
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -51,11 +56,16 @@ public class AuthService {
                 )
         );
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
 
+        UserResponse userResponse = userServiceClient.getUserById(request.getUserId());
 
-        String token = jwtUtil.generateToken(user.getUserId(), user.getRole().name());
+        // Token oluşturuluyor
+        String token = jwtUtil.generateToken(userResponse.getUserId(), userResponse.getRole().name());
         return new AuthResponse(token);
+    }
+
+    // Kullanıcıyı başka bir servisten almak için kullanılan metot
+    public UserResponse getUserFromUserService(Long id) {
+        return userServiceClient.getUserById(id);
     }
 }

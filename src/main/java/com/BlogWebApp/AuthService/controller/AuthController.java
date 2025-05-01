@@ -2,13 +2,13 @@ package com.BlogWebApp.AuthService.controller;
 
 import com.BlogWebApp.AuthService.dto.AuthResponse;
 import com.BlogWebApp.AuthService.dto.LoginRequest;
-import com.BlogWebApp.AuthService.dto.RegisterRequest;
-import com.BlogWebApp.AuthService.dto.UserResponse;
-import com.BlogWebApp.AuthService.model.User;
-import com.BlogWebApp.AuthService.repository.UserRepository;
 import com.BlogWebApp.AuthService.security.JwtUtil;
 import com.BlogWebApp.AuthService.service.AuthService;
+import com.BlogWebApp.CommonSecurity.client.UserServiceClient;
+import com.BlogWebApp.CommonSecurity.dto.RegisterRequest;
+import com.BlogWebApp.CommonSecurity.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +18,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthService authService;
-    private final JwtUtil jwtUtil;
-    private final UserRepository userRepository;
+    @Autowired
+    private AuthService authService;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private UserServiceClient userServiceClient; // UserServiceClient enjekte edildi
 
-
+    // Kullanıcı bilgilerini user mikroservisinden almak için düzenlendi
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Kullanıcı bulunamadı"));
-        UserResponse response = new UserResponse(user.getUserId(), user.getUserName(), user.getEmail());
-        return ResponseEntity.ok(response);
+        UserResponse userResponse = userServiceClient.getUserById(id);
+        return ResponseEntity.ok(userResponse);
     }
 
     @PostMapping("/register")
