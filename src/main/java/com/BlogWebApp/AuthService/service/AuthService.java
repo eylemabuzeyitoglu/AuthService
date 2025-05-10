@@ -2,12 +2,12 @@ package com.BlogWebApp.AuthService.service;
 
 
 import com.BlogWebApp.AuthService.security.JwtUtil;
-import com.BlogWebApp.CommonSecurity.client.UserServiceClient;
-import com.BlogWebApp.CommonSecurity.dto.AuthResponse;
-import com.BlogWebApp.CommonSecurity.dto.LoginRequest;
-import com.BlogWebApp.CommonSecurity.dto.RegisterRequest;
-import com.BlogWebApp.CommonSecurity.dto.UserResponse;
-import com.BlogWebApp.CommonSecurity.model.Role;
+import com.BlogWebApp.Common.client.UserServiceClient;
+import com.BlogWebApp.Common.dto.AuthResponse;
+import com.BlogWebApp.Common.dto.LoginRequest;
+import com.BlogWebApp.Common.dto.RegisterRequest;
+import com.BlogWebApp.Common.dto.UserResponse;
+import com.BlogWebApp.Common.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

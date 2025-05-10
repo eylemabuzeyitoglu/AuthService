@@ -1,7 +1,8 @@
 package com.BlogWebApp.AuthService.security;
 
-import com.BlogWebApp.CommonSecurity.client.UserServiceClient;
-import com.BlogWebApp.CommonSecurity.dto.UserResponse;
+
+import com.BlogWebApp.Common.client.UserServiceClient;
+import com.BlogWebApp.Common.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -3,11 +3,11 @@ package com.BlogWebApp.AuthService.controller;
 
 import com.BlogWebApp.AuthService.security.JwtUtil;
 import com.BlogWebApp.AuthService.service.AuthService;
-import com.BlogWebApp.CommonSecurity.client.UserServiceClient;
-import com.BlogWebApp.CommonSecurity.dto.AuthResponse;
-import com.BlogWebApp.CommonSecurity.dto.LoginRequest;
-import com.BlogWebApp.CommonSecurity.dto.RegisterRequest;
-import com.BlogWebApp.CommonSecurity.dto.UserResponse;
+import com.BlogWebApp.Common.client.UserServiceClient;
+import com.BlogWebApp.Common.dto.AuthResponse;
+import com.BlogWebApp.Common.dto.LoginRequest;
+import com.BlogWebApp.Common.dto.RegisterRequest;
+import com.BlogWebApp.Common.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
