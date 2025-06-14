@@ -3,10 +3,10 @@ package com.BlogWebApp.AuthService.service;
 
 import com.BlogWebApp.AuthService.security.JwtUtil;
 import com.BlogWebApp.Common.client.UserServiceClient;
-import com.BlogWebApp.Common.dto.AuthResponse;
-import com.BlogWebApp.Common.dto.LoginRequest;
-import com.BlogWebApp.Common.dto.RegisterRequest;
-import com.BlogWebApp.Common.dto.UserResponse;
+import com.BlogWebApp.Common.dto.request.LoginRequest;
+import com.BlogWebApp.Common.dto.request.RegisterRequest;
+import com.BlogWebApp.Common.dto.response.AuthResponse;
+import com.BlogWebApp.Common.dto.response.UserResponse;
 import com.BlogWebApp.Common.model.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
