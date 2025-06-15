@@ -5,7 +5,6 @@ import com.BlogWebApp.AuthService.security.JwtUtil;
 import com.BlogWebApp.AuthService.service.AuthService;
 import com.BlogWebApp.Common.client.UserServiceClient;
 import com.BlogWebApp.Common.dto.request.LoginRequest;
-import com.BlogWebApp.Common.dto.request.RegisterRequest;
 import com.BlogWebApp.Common.dto.response.AuthResponse;
 import com.BlogWebApp.Common.dto.response.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,12 +29,6 @@ public class AuthController {
     public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
         UserResponse userResponse = userServiceClient.getUserById(id);
         return ResponseEntity.ok(userResponse);
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
-        AuthResponse response = authService.register(request);
-        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/login")
